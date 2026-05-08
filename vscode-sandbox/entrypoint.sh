@@ -5,6 +5,10 @@ _USER="${USERNAME:-whil}"
 SSH_DIR="/home/${_USER}/.ssh"
 AUTH_KEYS="${SSH_DIR}/authorized_keys"
 
+# Fix home dir ownership/perms — PVC mount resets these to root:root 777
+chown "${_USER}:${_USER}" "/home/${_USER}"
+chmod 750 "/home/${_USER}"
+
 # Ensure .ssh dir exists with correct perms
 mkdir -p "${SSH_DIR}"
 chmod 700 "${SSH_DIR}"
