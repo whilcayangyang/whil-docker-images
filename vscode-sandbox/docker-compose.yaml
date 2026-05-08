@@ -1,0 +1,10 @@
+services:
+  vscode-sandbox:
+    build:
+      context: .
+    image: ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
+    ports:
+      - "2222:22"
+    environment:
+      AUTHORIZED_KEYS: "${AUTHORIZED_KEYS}"
+    restart: unless-stopped
