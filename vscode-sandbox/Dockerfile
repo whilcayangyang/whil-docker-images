@@ -61,6 +61,8 @@ RUN apt update && \
     python3 \
     python3-pip \
     python3-venv \
+    nodejs \
+    npm \
     ca-certificates \
     git \
     curl && \

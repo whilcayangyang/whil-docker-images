@@ -18,6 +18,7 @@ A Debian-based SSH remote development container pre-loaded with infrastructure t
 | terraform-docs | v0.23.0 |
 | Hugo | 0.161.1 |
 | Python 3 | system |
+| Node.js / npm | system |
 | Git | system |
 
 **Image:** `ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest`
