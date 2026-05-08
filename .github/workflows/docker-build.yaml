@@ -1,13 +1,12 @@
-name: docker-build
+name: Docker Build & Push
 
 on:
   push:
     branches:
       - main
     paths:
-      - '*/Dockerfile'
-      - '*/entrypoint.sh'
-      - '*/docker-compose.yaml'
+      - "*/Dockerfile"
+      - "*/entrypoint.sh"
   workflow_dispatch:
     inputs:
       image:
@@ -19,6 +18,7 @@ env:
 
 jobs:
   detect:
+    name: Detect Changed Images
     runs-on: ubuntu-latest
     outputs:
       images: ${{ steps.changed.outputs.images }}
@@ -42,7 +42,15 @@ jobs:
             echo "images=${CHANGED}" >> $GITHUB_OUTPUT
           fi
 
+      - name: Summary
+        run: |
+          echo "### Detected Images" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.changed.outputs.images }}' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
   build-push:
+    name: Build & Push — ${{ matrix.image }}
     needs: detect
     if: needs.detect.outputs.images != '[]'
     runs-on: ubuntu-latest
@@ -86,3 +94,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.image }}
           cache-to: type=gha,mode=max,scope=${{ matrix.image }}
+
+      - name: Summary
+        run: |
+          echo "### ${{ matrix.image }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry:** \`${{ env.REGISTRY }}/${{ github.repository }}/${{ matrix.image }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "**Tags:**" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo '${{ steps.meta.outputs.tags }}' >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
