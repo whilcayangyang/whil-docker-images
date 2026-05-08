@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: vscode-sandbox
+  namespace: vscode-sandbox
+spec:
+  serviceName: vscode-sandbox
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vscode-sandbox
+  template:
+    metadata:
+      labels:
+        app: vscode-sandbox
+    spec:
+      containers:
+        - name: vscode-sandbox
+          image: ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
+          ports:
+            - containerPort: 22
+              name: ssh
+          env:
+            - name: AUTHORIZED_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: vscode-sandbox-ssh-keys
+                  key: authorized_keys
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "3Gi"
+          volumeMounts:
+            - name: home
+              mountPath: /home/whil
+      volumes:
+        - name: home
+          persistentVolumeClaim:
+            claimName: vscode-sandbox-home

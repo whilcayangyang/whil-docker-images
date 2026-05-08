@@ -1,8 +1,7 @@
 services:
   vscode-sandbox:
-    build:
-      context: .
     image: ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
+    container_name: vscode-sandbox
     ports:
       - "2222:22"
     environment:
