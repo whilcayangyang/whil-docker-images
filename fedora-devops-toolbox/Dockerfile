@@ -1,0 +1,63 @@
+FROM fedora:44 AS builder
+
+ENV TF_VERSION="1.15.2"
+ENV TFDOCS_VERSION="v0.23.0"
+
+RUN dnf install -y curl unzip tar openssl && dnf clean all
+
+# --- terraform ---
+RUN TF_ZIP="terraform_${TF_VERSION}_linux_amd64.zip" \
+  && curl -sfL "https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_ZIP}" -o /tmp/${TF_ZIP} \
+  && unzip -o /tmp/${TF_ZIP} -d /usr/local/bin/ > /dev/null \
+  && chmod +x /usr/local/bin/terraform \
+  && rm -f /tmp/${TF_ZIP}
+
+# --- tflint ---
+RUN curl -sfL https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh \
+  | bash -s -- -b /usr/local/bin
+
+# --- trivy ---
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
+  | sh -s -- -b /usr/local/bin
+
+# --- terraform-docs ---
+RUN TFDOCS_TGZ="terraform-docs-${TFDOCS_VERSION}-linux-amd64.tar.gz" \
+  && curl -sfL "https://github.com/terraform-docs/terraform-docs/releases/download/${TFDOCS_VERSION}/${TFDOCS_TGZ}" \
+  -o /tmp/${TFDOCS_TGZ} \
+  && tar -xzf /tmp/${TFDOCS_TGZ} -C /usr/local/bin/ \
+  && chmod +x /usr/local/bin/terraform-docs \
+  && rm -f /tmp/${TFDOCS_TGZ} /usr/local/bin/LICENSE /usr/local/bin/README.md
+
+# --- talos ---
+RUN curl -sL https://talos.dev/install | sh
+
+# --- final image (must be fedora-toolbox for toolbox/distrobox compatibility) ---
+FROM registry.fedoraproject.org/fedora-toolbox:44
+
+LABEL com.github.containers.toolbox="true"
+LABEL org.opencontainers.image.source="https://github.com/whilcayangyang/whil-docker-images"
+LABEL org.opencontainers.image.description="Fedora toolbox with DevOps tooling for Silverblue"
+
+COPY --from=builder /usr/local/bin/terraform      /usr/local/bin/terraform
+COPY --from=builder /usr/local/bin/tflint         /usr/local/bin/tflint
+COPY --from=builder /usr/local/bin/trivy          /usr/local/bin/trivy
+COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
+COPY --from=builder /usr/local/bin/talosctl       /usr/local/bin/talosctl
+
+RUN dnf install -y \
+  kubectl \
+  helm \
+  k9s \
+  ansible \
+  nodejs \
+  npm \
+  hugo \
+  go-task \
+  git \
+  curl \
+  jq \
+  yq \
+  restic \
+  rclone \
+  python3-pip \
+  && dnf clean all

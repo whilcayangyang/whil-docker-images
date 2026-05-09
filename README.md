@@ -74,6 +74,47 @@ ssh whil@<EXTERNAL-IP>
 
 The home directory (`/home/whil`) is backed by a 10Gi persistent volume.
 
+### `fedora-devops-toolbox`
+
+A Fedora 44 toolbox image for [Silverblue](https://fedoraproject.org/silverblue/) / [distrobox](https://distrobox.it/) with DevOps tooling pre-installed. Built with a multi-stage Dockerfile to keep the final image lean.
+
+**Included tools:**
+
+| Tool | Version | Source |
+|------|---------|--------|
+| kubectl | latest | Fedora repo |
+| helm | latest | Fedora repo |
+| k9s | latest | Fedora repo |
+| ansible | latest | Fedora repo |
+| hugo | latest | Fedora repo |
+| go-task | latest | Fedora repo |
+| restic | latest | Fedora repo |
+| rclone | latest | Fedora repo |
+| git, curl, jq, yq | latest | Fedora repo |
+| Node.js / npm | latest | Fedora repo |
+| Python 3 / pip | latest | Fedora repo |
+| terraform | 1.15.2 | binary (releases.hashicorp.com) |
+| tflint | latest | binary (install script) |
+| trivy | latest | binary (install script) |
+| terraform-docs | v0.23.0 | binary |
+| talosctl | latest | binary (talos.dev/install) |
+
+**Image:** `ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest`
+
+**Usage (toolbox):**
+
+```bash
+toolbox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest devops
+toolbox enter devops
+```
+
+**Usage (distrobox):**
+
+```bash
+distrobox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest --name devops
+distrobox enter devops
+```
+
 ## CI/CD
 
 Images are built and pushed to GHCR automatically on pushes to `main` that modify files under an image subfolder. You can also trigger a manual build via `workflow_dispatch` and specifying the subfolder name (e.g. `vscode-sandbox`).
