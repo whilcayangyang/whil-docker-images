@@ -59,5 +59,9 @@ RUN dnf install -y \
   yq \
   restic \
   rclone \
+  zsh \
+  zsh-autosuggestions \
+  zsh-syntax-highlighting \
+  fastfetch \
   python3-pip \
   && dnf clean all

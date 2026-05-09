@@ -93,11 +93,33 @@ A Fedora 44 toolbox image for [Silverblue](https://fedoraproject.org/silverblue/
 | git, curl, jq, yq | latest | Fedora repo |
 | Node.js / npm | latest | Fedora repo |
 | Python 3 / pip | latest | Fedora repo |
+| zsh + plugins | latest | Fedora repo |
+| fastfetch | latest | Fedora repo |
 | terraform | 1.15.2 | binary (releases.hashicorp.com) |
 | tflint | latest | binary (install script) |
 | trivy | latest | binary (install script) |
 | terraform-docs | v0.23.0 | binary |
 | talosctl | latest | binary (talos.dev/install) |
+
+**Shell (zsh + Oh My Zsh):**
+
+`zsh`, `zsh-autosuggestions`, and `zsh-syntax-highlighting` are installed in the image. Since toolbox mounts your host `$HOME` into the container, your existing `.oh-my-zsh/` directory and `.zshrc` are automatically available — no extra setup needed inside the toolbox.
+
+To make zsh the default shell on entry, ensure your host login shell is set to zsh:
+
+```bash
+# Check current login shell
+getent passwd $USER | cut -d: -f7
+
+# Change to zsh if needed (then log out and back in)
+chsh -s $(which zsh)
+```
+
+Alternatively, add this to `~/.bashrc` as a fallback — toolbox will hand off to zsh automatically:
+
+```bash
+[ -x /usr/bin/zsh ] && exec /usr/bin/zsh
+```
 
 **Image:** `ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest`
 
