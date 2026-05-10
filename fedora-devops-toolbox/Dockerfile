@@ -5,6 +5,7 @@ FROM fedora:${FEDORA_VERSION} AS builder
 ENV TF_VERSION="1.15.2"
 ENV TFDOCS_VERSION="v0.23.0"
 ENV KUBESEAL_VERSION="0.36.6"
+ENV FLUX_VERSION="2.8.6"
 
 RUN dnf install -y curl unzip tar openssl && dnf clean all
 
@@ -41,7 +42,11 @@ RUN curl -sfOL "https://github.com/bitnami-labs/sealed-secrets/releases/download
   && rm -f kubeseal kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz
 
 # --- flux ---
-RUN curl -s https://fluxcd.io/install.sh | bash
+RUN curl -sfL "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" \
+  -o /tmp/flux.tar.gz \
+  && tar -xzf /tmp/flux.tar.gz -C /usr/local/bin/ flux \
+  && chmod +x /usr/local/bin/flux \
+  && rm -f /tmp/flux.tar.gz
 
 # --- final image (must be fedora-toolbox for toolbox/distrobox compatibility) ---
 FROM registry.fedoraproject.org/fedora-toolbox:${FEDORA_VERSION}
