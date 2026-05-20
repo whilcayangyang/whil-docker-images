@@ -10,22 +10,20 @@ A Debian-based SSH remote development container pre-loaded with infrastructure t
 
 **Included tools:**
 
-| Tool | Version |
-|------|---------|
-| Terraform | 1.15.2 |
-| TFLint | latest |
-| Trivy | latest |
-| terraform-docs | v0.23.0 |
-| Hugo | 0.161.1 |
-| Python 3 | system |
-| Node.js / npm | system |
-| Git | system |
+| Tool | Version | Source |
+|------|---------|--------|
+| Terraform | 1.15.2 | binary (releases.hashicorp.com) |
+| TFLint | latest | binary (install script) |
+| Trivy | latest | binary (install script) |
+| terraform-docs | v0.23.0 | binary |
+| Hugo | 0.161.1 | binary |
+| Python 3 / pip / venv | system | Debian repo |
+| Node.js / npm | system | Debian repo |
+| Git, curl | system | Debian repo |
 
 **Image:** `ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest`
 
-## Usage
-
-### Docker Compose
+#### Docker Compose
 
 ```bash
 cp vscode-sandbox/.env.example vscode-sandbox/.env
@@ -41,7 +39,7 @@ Then connect via VS Code Remote - SSH on port `2222`:
 ssh -p 2222 whil@<host>
 ```
 
-### Kubernetes
+#### Kubernetes
 
 Requires a cluster with [MetalLB](https://metallb.universe.io/) and a `local-path` StorageClass (e.g. [local-path-provisioner](https://github.com/rancher/local-path-provisioner)).
 
@@ -74,6 +72,8 @@ ssh whil@<EXTERNAL-IP>
 
 The home directory (`/home/whil`) is backed by a 10Gi persistent volume.
 
+---
+
 ### `fedora-devops-toolbox`
 
 A Fedora 44 toolbox image for [Silverblue](https://fedoraproject.org/silverblue/) / [distrobox](https://distrobox.it/) with DevOps tooling pre-installed. Built with a multi-stage Dockerfile to keep the final image lean.
@@ -90,6 +90,7 @@ A Fedora 44 toolbox image for [Silverblue](https://fedoraproject.org/silverblue/
 | go-task | latest | Fedora repo |
 | restic | latest | Fedora repo |
 | rclone | latest | Fedora repo |
+| age | latest | Fedora repo |
 | git, curl, jq, yq | latest | Fedora repo |
 | Node.js / npm | latest | Fedora repo |
 | Python 3 / pip | latest | Fedora repo |
@@ -100,6 +101,9 @@ A Fedora 44 toolbox image for [Silverblue](https://fedoraproject.org/silverblue/
 | trivy | latest | binary (install script) |
 | terraform-docs | v0.23.0 | binary |
 | talosctl | latest | binary (talos.dev/install) |
+| kubeseal | 0.36.6 | binary |
+| flux | 2.8.6 | binary |
+| sops | 3.13.1 | binary |
 
 **Shell (zsh + Oh My Zsh):**
 
@@ -123,19 +127,21 @@ Alternatively, add this to `~/.bashrc` as a fallback — toolbox will hand off t
 
 **Image:** `ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest`
 
-**Usage (toolbox):**
+#### Usage (toolbox)
 
 ```bash
 toolbox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest devops
 toolbox enter devops
 ```
 
-**Usage (distrobox):**
+#### Usage (distrobox)
 
 ```bash
 distrobox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest --name devops
 distrobox enter devops
 ```
+
+---
 
 ## CI/CD
 
