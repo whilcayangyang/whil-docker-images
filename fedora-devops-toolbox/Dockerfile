@@ -6,6 +6,7 @@ ENV TF_VERSION="1.15.2"
 ENV TFDOCS_VERSION="v0.23.0"
 ENV KUBESEAL_VERSION="0.36.6"
 ENV FLUX_VERSION="2.8.6"
+ENV SOPS_VERSION="3.13.1"
 
 RUN dnf install -y curl unzip tar openssl && dnf clean all
 
@@ -41,6 +42,11 @@ RUN curl -sfOL "https://github.com/bitnami-labs/sealed-secrets/releases/download
   && install -m 755 kubeseal /usr/local/bin/kubeseal \
   && rm -f kubeseal kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz
 
+# --- sops ---
+RUN curl -sfL "https://github.com/getsops/sops/releases/download/v${SOPS_VERSION}/sops-v${SOPS_VERSION}.linux.amd64" \
+  -o /usr/local/bin/sops \
+  && chmod +x /usr/local/bin/sops
+
 # --- flux ---
 RUN curl -sfL "https://github.com/fluxcd/flux2/releases/download/v${FLUX_VERSION}/flux_${FLUX_VERSION}_linux_amd64.tar.gz" \
   -o /tmp/flux.tar.gz \
@@ -62,6 +68,7 @@ COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
 COPY --from=builder /usr/local/bin/talosctl       /usr/local/bin/talosctl
 COPY --from=builder /usr/local/bin/kubeseal       /usr/local/bin/kubeseal
 COPY --from=builder /usr/local/bin/flux           /usr/local/bin/flux
+COPY --from=builder /usr/local/bin/sops           /usr/local/bin/sops
 
 RUN dnf install -y \
   kubectl \
@@ -76,6 +83,7 @@ RUN dnf install -y \
   curl \
   jq \
   yq \
+  age \
   restic \
   rclone \
   zsh \
