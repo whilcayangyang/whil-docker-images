@@ -36,58 +36,7 @@ ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
 
 </details>
 
-<<<<<<< HEAD
 ---
-=======
-#### Docker Compose
-
-```bash
-cp vscode-sandbox/.env.example vscode-sandbox/.env
-# Edit .env and set your SSH public key
-nano vscode-sandbox/.env
-
-docker compose -f vscode-sandbox/docker-compose.yaml up -d
-```
-
-Then connect via VS Code Remote - SSH on port `2222`:
-
-```
-ssh -p 2222 whil@<host>
-```
-
-#### Kubernetes
-
-Requires a cluster with [MetalLB](https://metallb.universe.io/) and a `local-path` StorageClass (e.g. [local-path-provisioner](https://github.com/rancher/local-path-provisioner)).
-
-**1. Create the namespace and secret:**
-
-```bash
-kubectl apply -f vscode-sandbox/k8s/namespace.yaml
-
-# Replace placeholder with your actual public key
-kubectl apply -f vscode-sandbox/k8s/secret.yaml
-```
-
-Edit `vscode-sandbox/k8s/secret.yaml` first — replace `ssh-ed25519 AAAA... user@host` with your public key.
-
-**2. Apply remaining manifests:**
-
-```bash
-kubectl apply -f vscode-sandbox/k8s/pvc.yaml
-kubectl apply -f vscode-sandbox/k8s/statefulset.yaml
-kubectl apply -f vscode-sandbox/k8s/service.yaml
-```
-
-**3. Get the assigned IP and connect:**
-
-```bash
-kubectl get svc -n vscode-sandbox vscode-sandbox-ssh
-# Connect on port 22 to the EXTERNAL-IP
-ssh whil@<EXTERNAL-IP>
-```
-
-The home directory (`/home/whil`) is backed by a 10Gi persistent volume.
->>>>>>> 9e5084ad996eef7b26eb9c7f89ecd19fcd7b4a08
 
 ---
 
@@ -124,14 +73,10 @@ ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest
 | tflint | latest | binary |
 | trivy | latest | binary |
 | terraform-docs | v0.23.0 | binary |
-<<<<<<< HEAD
-| talosctl | latest | binary |
-=======
 | talosctl | latest | binary (talos.dev/install) |
 | kubeseal | 0.36.6 | binary |
 | flux | 2.8.6 | binary |
 | sops | 3.13.1 | binary |
->>>>>>> 9e5084ad996eef7b26eb9c7f89ecd19fcd7b4a08
 
 </details>
 
@@ -153,70 +98,14 @@ Or add a fallback in `~/.bashrc`:
 
 ---
 
-<<<<<<< HEAD
-## Usage
-
-### `vscode-sandbox`
-
-#### Local build
-
-```bash
-podman build -t localhost/vscode-sandbox:local vscode-sandbox/
-```
-
-#### Podman Compose
-
-```bash
-cp vscode-sandbox/.env.example vscode-sandbox/.env
-nano vscode-sandbox/.env          # set AUTHORIZED_KEYS to your SSH public key
-
-podman compose -f vscode-sandbox/docker-compose.yaml up -d
-```
-
-Connect via VS Code Remote - SSH:
-
-```bash
-ssh -p 2222 whil@<host>
-```
-
-#### Kubernetes
-
-Requires a cluster with [MetalLB](https://metallb.universe.io/) and a `local-path` StorageClass (e.g. [local-path-provisioner](https://github.com/rancher/local-path-provisioner)).
-
-```bash
-# 1. Namespace + secret (edit secret.yaml first — replace the placeholder public key)
-kubectl apply -f vscode-sandbox/k8s/namespace.yaml
-kubectl apply -f vscode-sandbox/k8s/secret.yaml
-
-# 2. Storage, workload, service
-kubectl apply -f vscode-sandbox/k8s/pvc.yaml
-kubectl apply -f vscode-sandbox/k8s/statefulset.yaml
-kubectl apply -f vscode-sandbox/k8s/service.yaml
-
-# 3. Get the assigned IP and connect
-kubectl get svc -n vscode-sandbox vscode-sandbox-ssh
-ssh whil@<EXTERNAL-IP>
-```
-
-> The home directory (`/home/whil`) is backed by a 10Gi persistent volume.
-
-### `fedora-devops-toolbox`
-
-#### toolbox
-=======
 #### Usage (toolbox)
->>>>>>> 9e5084ad996eef7b26eb9c7f89ecd19fcd7b4a08
 
 ```bash
 toolbox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest devops
 toolbox enter devops
 ```
 
-<<<<<<< HEAD
-#### distrobox
-=======
 #### Usage (distrobox)
->>>>>>> 9e5084ad996eef7b26eb9c7f89ecd19fcd7b4a08
 
 ```bash
 distrobox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest --name devops
