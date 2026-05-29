@@ -1,6 +1,11 @@
 services:
   vscode-sandbox:
-    image: ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        AUTHORIZED_KEYS: "${AUTHORIZED_KEYS:-}"
+    image: localhost/vscode-sandbox:local
     container_name: vscode-sandbox
     ports:
       - "2222:22"

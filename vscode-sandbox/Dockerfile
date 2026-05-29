@@ -74,7 +74,8 @@ RUN apt update && \
     /usr/share/info \
     /usr/share/locale/?? \
     /usr/share/locale/??_?? \
-    /root/.cache
+    /root/.cache && \
+    rm -f /etc/ssh/ssh_host_*
 
 RUN groupadd --gid ${GID} ${USERNAME} && \
     useradd --uid ${UID} --gid ${GID} --shell /bin/bash --create-home ${USERNAME} && \
