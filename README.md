@@ -10,7 +10,7 @@ A collection of container images built and published to GHCR via GitHub Actions.
 
 ## Images
 
-### `vscode-sandbox`
+### `vscode-sandbox 263.38 MB  (0.26 GB) `
 
 [![ghcr: vscode-sandbox](https://img.shields.io/badge/ghcr.io-vscode--sandbox-blue?logo=docker&logoColor=white)](https://github.com/whilcayangyang/whil-docker-images/pkgs/container/whil-docker-images%2Fvscode-sandbox)
 
@@ -40,7 +40,7 @@ ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
 
 ---
 
-### `fedora-devops-toolbox`
+### `fedora-devops-toolbox 890.21 MB  (0.87 GB) `
 
 [![ghcr: fedora-devops-toolbox](https://img.shields.io/badge/ghcr.io-fedora--devops--toolbox-blue?logo=docker&logoColor=white)](https://github.com/whilcayangyang/whil-docker-images/pkgs/container/whil-docker-images%2Ffedora-devops-toolbox)
 
