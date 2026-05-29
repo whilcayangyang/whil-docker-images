@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BOLD=$'\e[1m'
+RESET=$'\e[0m'
+
+DEFAULT_IMAGES=(
+  "ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest"
+  "ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest"
+)
+IMAGES=("${@:-${DEFAULT_IMAGES[@]}}")
+
+print_image_box() {
+  local IMAGE="$1"
+
+  INDEX=$(skopeo inspect --raw "docker://${IMAGE}")
+  MEDIATYPE=$(echo "$INDEX" | jq -r '.mediaType')
+
+  if [[ "$MEDIATYPE" == *"index"* || "$MEDIATYPE" == *"manifest.list"* ]]; then
+    DIGEST=$(echo "$INDEX" | jq -r '.manifests[] | select(.platform.architecture=="amd64" and .platform.os=="linux") | .digest')
+    MANIFEST=$(skopeo inspect --raw "docker://${IMAGE%%:*}@${DIGEST}")
+  else
+    MANIFEST="$INDEX"
+  fi
+
+  LAYERS=$(echo "$MANIFEST" | jq '[.layers[]]')
+  LAYER_COUNT=$(echo "$LAYERS" | jq 'length')
+  BYTES=$(echo "$LAYERS" | jq '[.[].size] | add')
+  MB=$(echo "$BYTES" | awk '{printf "%.2f", $1/1024/1024}')
+  GB=$(echo "$BYTES" | awk '{printf "%.2f", $1/1024/1024/1024}')
+
+  SIZE_PLAIN="${MB} MB  (${GB} GB)"
+
+  L1_PLAIN=$(printf '  %-8s %s' "Image"  "$IMAGE")
+  L2_PLAIN=$(printf '  %-8s %s' "Layers" "$LAYER_COUNT")
+  L3_PLAIN=$(printf '  %-8s %s' "Size"   "$SIZE_PLAIN")
+
+  WIDTH=$(printf '%s\n' "$L1_PLAIN" "$L2_PLAIN" "$L3_PLAIN" | awk '{ if (length > m) m = length } END { print m }')
+  BAR=$(printf '%*s' "$((WIDTH + 2))" '' | tr ' ' '-')
+
+  L3_BOLD=$(printf '  %-8s %s' "Size" "${BOLD}${SIZE_PLAIN}${RESET}")
+
+  printf '+%s+\n' "$BAR"
+  printf '|%-*s|\n' "$((WIDTH + 2))" "$L1_PLAIN"
+  printf '|%-*s|\n' "$((WIDTH + 2))" "$L2_PLAIN"
+  printf '|%-*s|\n' "$((WIDTH + 2 + ${#BOLD} + ${#RESET}))" "$L3_BOLD"
+  printf '+%s+\n' "$BAR"
+}
+
+printf '\n'
+for IMAGE in "${IMAGES[@]}"; do
+  print_image_box "$IMAGE"
+  printf '\n'
+done

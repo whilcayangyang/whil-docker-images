@@ -87,6 +87,8 @@ RUN dnf install -y --setopt=install_weak_deps=False \
   restic \
   rclone \
   zsh \
+  zsh-autosuggestions \
+  zsh-syntax-highlighting \
   fastfetch \
   python3-pip \
   && dnf clean all \
