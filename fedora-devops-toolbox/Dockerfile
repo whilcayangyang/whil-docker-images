@@ -70,7 +70,7 @@ COPY --from=builder /usr/local/bin/kubeseal       /usr/local/bin/kubeseal
 COPY --from=builder /usr/local/bin/flux           /usr/local/bin/flux
 COPY --from=builder /usr/local/bin/sops           /usr/local/bin/sops
 
-RUN dnf install -y \
+RUN dnf install -y --setopt=install_weak_deps=False \
   kubectl \
   helm \
   k9s \
@@ -87,8 +87,7 @@ RUN dnf install -y \
   restic \
   rclone \
   zsh \
-  zsh-autosuggestions \
-  zsh-syntax-highlighting \
   fastfetch \
   python3-pip \
-  && dnf clean all
+  && dnf clean all \
+  && rm -rf /var/cache/dnf /var/lib/dnf/history*
