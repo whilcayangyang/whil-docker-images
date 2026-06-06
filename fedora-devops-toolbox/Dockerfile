@@ -2,10 +2,10 @@ ARG FEDORA_VERSION=44
 
 FROM fedora:${FEDORA_VERSION} AS builder
 
-ENV TF_VERSION="1.15.2"
-ENV TFDOCS_VERSION="v0.23.0"
-ENV KUBESEAL_VERSION="0.36.6"
-ENV FLUX_VERSION="2.8.6"
+ENV TF_VERSION="1.15.5"
+ENV TFDOCS_VERSION="v0.24.0"
+ENV KUBESEAL_VERSION="0.37.0"
+ENV FLUX_VERSION="2.8.8"
 ENV SOPS_VERSION="3.13.1"
 
 RUN dnf install -y curl unzip tar openssl && dnf clean all
@@ -80,7 +80,7 @@ RUN dnf install -y --setopt=install_weak_deps=False \
   hugo \
   go-task \
   git \
-  curl \
+  vim \
   jq \
   yq \
   age \
