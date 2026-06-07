@@ -1,8 +1,8 @@
 FROM debian:trixie-slim AS builder
 
-ENV TF_VERSION="1.15.2"
-ENV TFDOCS_VERSION="v0.23.0"
-ENV HUGO_VERSION="0.161.1"
+ENV TF_VERSION="1.15.5"
+ENV TFDOCS_VERSION="v0.24.0"
+ENV HUGO_VERSION="0.162.1"
 
 RUN apt update && \
     apt install -y --no-install-recommends curl unzip tar ca-certificates && \
