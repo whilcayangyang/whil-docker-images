@@ -10,7 +10,7 @@ A collection of container images built and published to GHCR via GitHub Actions.
 
 ## Images
 
-### `vscode-sandbox 263.38 MB  (0.26 GB) `
+### `vscode-sandbox 267.56 MB (0.26 GB) `
 
 [![ghcr: vscode-sandbox](https://img.shields.io/badge/ghcr.io-vscode--sandbox-blue?logo=docker&logoColor=white)](https://github.com/whilcayangyang/whil-docker-images/pkgs/container/whil-docker-images%2Fvscode-sandbox)
 
@@ -40,7 +40,7 @@ ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
 
 ---
 
-### `fedora-devops-toolbox 890.21 MB  (0.87 GB) `
+### `fedora-devops-toolbox 907.78 MB (0.89 GB) `
 
 [![ghcr: fedora-devops-toolbox](https://img.shields.io/badge/ghcr.io-fedora--devops--toolbox-blue?logo=docker&logoColor=white)](https://github.com/whilcayangyang/whil-docker-images/pkgs/container/whil-docker-images%2Ffedora-devops-toolbox)
 
@@ -122,6 +122,15 @@ Images are built and pushed to GHCR automatically on pushes to `main` that modif
 |-----|---------|
 | `latest` | tracks `main` |
 | `sha-<commit>` | immutable per-commit tag |
+
+### Required Repository Secrets
+
+| Secret | Purpose |
+|--------|---------|
+| `DOCKERHUB_USERNAME` | Docker Hub username — authenticates the BuildKit image pull during `setup-buildx`, preventing rate-limit failures on shared runners |
+| `DOCKERHUB_TOKEN` | Docker Hub access token (hub.docker.com → Account Settings → Security) |
+
+`GITHUB_TOKEN` is provided automatically by Actions and requires no setup.
 
 ---
 
