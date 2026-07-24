@@ -25,6 +25,7 @@ Pin versions via `ENV` variables at the top of the builder stage. Tools installe
 
 - K8s StatefulSet requires explicit Linux capabilities (`CHOWN`, `FOWNER`, `DAC_OVERRIDE`, `NET_BIND_SERVICE`, `SETUID`, `SETGID`, `KILL`, `AUDIT_WRITE`) and `runAsUser: 0` — entrypoint.sh fixes PVC ownership at startup and needs these.
 - `AUTHORIZED_KEYS` can be injected as a build ARG, runtime env var, or via K8s Secret mounted at `/authorized_keys.d/`.
+- `k8s/` manifests are Kustomize templates: `<PLACEHOLDER>` tokens (namespace, app name, image tag, LoadBalancer IP, etc.) must be substituted before `kubectl apply`. `vscode-secret.yaml.tmpl` must be sealed via `kubeseal` into `vscode-sealed.yaml` (referenced by `kustomization.yaml` but intentionally not committed).
 
 ## Adding a New Image
 
@@ -34,3 +35,4 @@ Create a subfolder with a `Dockerfile`. Push to `main` — the workflow auto-det
 
 - `latest` — tracks `main`
 - `sha-<commit>` — immutable per-commit
+- CI also logs into Docker Hub (`DOCKERHUB_USERNAME`/`DOCKERHUB_TOKEN` secrets) before building — this only avoids anonymous-pull rate limits during `docker/setup-buildx-action`; images are still tagged and pushed to GHCR only.

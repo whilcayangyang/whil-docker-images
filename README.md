@@ -25,11 +25,11 @@ ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
 
 | Tool | Version | Source |
 |------|---------|--------|
-| Terraform | 1.15.2 | binary (releases.hashicorp.com) |
+| Terraform | 1.15.8 | binary (releases.hashicorp.com) |
 | TFLint | latest | binary (install script) |
 | Trivy | latest | binary (install script) |
-| terraform-docs | v0.23.0 | binary |
-| Hugo | 0.161.1 | binary |
+| terraform-docs | v0.24.0 | binary |
+| Hugo | 0.164.0 | binary |
 | Python 3 / pip / venv | system | Debian repo |
 | Node.js / npm | system | Debian repo |
 | Git, curl | system | Debian repo |
@@ -69,13 +69,13 @@ ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest
 | Python 3 / pip | latest | Fedora repo |
 | zsh + plugins | latest | Fedora repo |
 | fastfetch | latest | Fedora repo |
-| terraform | 1.15.2 | binary |
+| terraform | 1.15.7 | binary |
 | tflint | latest | binary |
 | trivy | latest | binary |
-| terraform-docs | v0.23.0 | binary |
+| terraform-docs | v0.24.0 | binary |
 | talosctl | latest | binary (talos.dev/install) |
-| kubeseal | 0.36.6 | binary |
-| flux | 2.8.6 | binary |
+| kubeseal | 0.38.1 | binary |
+| flux | 2.8.8 | binary |
 | sops | 3.13.1 | binary |
 
 </details>
