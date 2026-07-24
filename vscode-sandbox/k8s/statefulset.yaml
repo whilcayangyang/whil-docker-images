@@ -1,26 +1,43 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: vscode-sandbox
-  namespace: vscode-sandbox
+  name: <APP_NAME>  # e.g. vscode-sandbox
+  namespace: <NAMESPACE>
 spec:
-  serviceName: vscode-sandbox
+  serviceName: <APP_NAME>
   replicas: 1
   selector:
     matchLabels:
-      app: vscode-sandbox
+      app: <APP_NAME>
   template:
     metadata:
       labels:
-        app: vscode-sandbox
+        app: <APP_NAME>
     spec:
-      serviceAccountName: vscode-sandbox
+      serviceAccountName: <APP_NAME>
       securityContext:
-        fsGroup: 1000        # PVC volumes get GID 1000 (whil) on mount
-        runAsUser: 0         # root required: sshd binds port 22 and switches UIDs
+        fsGroup: <UID_GID>  # e.g. 1000
       containers:
-        - name: vscode-sandbox
-          image: ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
+        - name: <APP_NAME>
+          # renovate: depName=<IMAGE_REPO> versioning=loose
+          image: <IMAGE_REPO>:<IMAGE_TAG>  # e.g. ghcr.io/<org>/<repo>/vscode-sandbox:sha-<commit>
+          imagePullPolicy: Always
+          securityContext:
+            runAsUser: <ROOT_UID>  # 0 — required for entrypoint.sh privilege drop, see repo CLAUDE.md
+            allowPrivilegeEscalation: true # sudo is a SUID binary; no_new_privs silently breaks SUID exec
+            capabilities:
+              drop:
+                - ALL
+              add:
+                - CHOWN # entrypoint.sh — chown /home/whil and .ssh/ to whil:whil
+                - FOWNER # entrypoint.sh — chmod 750/700/600 on PVC-mounted dirs
+                - DAC_OVERRIDE # entrypoint.sh — ssh-keygen -A writes host keys to /etc/ssh/; sshd reads them
+                - NET_BIND_SERVICE # sshd binds port 22 (< 1024)
+                - SETUID # sshd: drop from root to UID 1000 after auth; sudo SUID binary
+                - SETGID # sshd: drop from root to GID 1000 after auth
+                - KILL # sshd: signal privsep child and session processes
+                - AUDIT_WRITE # sshd: audit_log_acct_message() on login events
+                - SYS_CHROOT # sshd: privsep chroot("/run/sshd") before auth
           ports:
             - containerPort: 22
               name: ssh
@@ -28,34 +45,19 @@ spec:
             - name: AUTHORIZED_KEYS
               valueFrom:
                 secretKeyRef:
-                  name: vscode-sandbox-ssh-keys
+                  name: <APP_NAME>-ssh-keys  # e.g. vscode-sandbox-ssh-keys
                   key: authorized_keys
-          securityContext:
-            runAsUser: 0
-            allowPrivilegeEscalation: true  # sshd forks privilege-separation child then drops to UID 1000
-            capabilities:
-              drop:
-                - ALL
-              add:
-                - CHOWN           # entrypoint.sh:9,38 — chown /home/whil and .ssh/ to whil:whil
-                - FOWNER          # entrypoint.sh:10,14,39 — chmod 750/700/600 on PVC-mounted dirs
-                - DAC_OVERRIDE    # entrypoint.sh:46 — ssh-keygen -A writes host keys to /etc/ssh/; sshd reads them
-                - NET_BIND_SERVICE # Dockerfile:108 EXPOSE 22 — sshd binds port 22 (< 1024)
-                - SETUID          # sshd: drop from root to UID 1000 (whil) after auth; sudo SUID binary (Dockerfile:59)
-                - SETGID          # sshd: drop from root to GID 1000 (whil) after auth
-                - KILL            # sshd: send SIGHUP/SIGTERM to privilege-separation child and session processes
-                - AUDIT_WRITE     # sshd: audit_log_acct_message() on login events (graceful without it; avoids log noise)
           resources:
             requests:
-              cpu: "500m"
+              cpu: "100m"
               memory: "512Mi"
             limits:
               cpu: "1"
               memory: "3Gi"
           volumeMounts:
             - name: home
-              mountPath: /home/whil
+              mountPath: /home/<USERNAME>  # e.g. /home/sandbox
       volumes:
         - name: home
           persistentVolumeClaim:
-            claimName: vscode-sandbox-home
+            claimName: <APP_NAME>-home  # e.g. vscode-sandbox-home

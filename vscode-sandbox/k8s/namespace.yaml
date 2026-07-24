@@ -1,4 +1,4 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: vscode-sandbox
+  name: <NAMESPACE>  # e.g. vscode-sandbox

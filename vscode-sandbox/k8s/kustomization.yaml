@@ -1,0 +1,13 @@
+# Template: replace <NAMESPACE>, <APP_NAME>, <STORAGE_CLASS>, <STORAGE_SIZE>,
+# <METALLB_POOL>, <LOADBALANCER_IP>, <IMAGE_REPO>, <IMAGE_TAG>, <UID_GID>,
+# <ROOT_UID>, <USERNAME> across these manifests, and generate vscode-sealed.yaml
+# from vscode-secret.yaml.tmpl via kubeseal before applying.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - serviceaccount.yaml
+  - pvc.yaml
+  - statefulset.yaml
+  - service.yaml
+  - vscode-sealed.yaml

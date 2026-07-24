@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: vscode-sandbox-home
-  namespace: vscode-sandbox
+  name: <APP_NAME>-home  # e.g. vscode-sandbox-home
+  namespace: <NAMESPACE>
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: local-path
+  storageClassName: <STORAGE_CLASS>  # e.g. local-path
   resources:
     requests:
-      storage: 10Gi
+      storage: <STORAGE_SIZE>  # e.g. 10Gi
