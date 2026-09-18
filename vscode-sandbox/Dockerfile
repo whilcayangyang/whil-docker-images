@@ -14,8 +14,11 @@ RUN TF_ZIP="terraform_${TF_VERSION}_linux_amd64.zip" && \
     chmod +x /usr/local/bin/terraform && \
     rm -f /tmp/${TF_ZIP}
 
-RUN curl -sfL https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh \
-    | bash -s -- -b /usr/local/bin
+RUN curl -sfL https://github.com/terraform-linters/tflint/releases/latest/download/tflint_linux_amd64.zip \
+    -o /tmp/tflint.zip && \
+    unzip -o /tmp/tflint.zip -d /usr/local/bin/ > /dev/null && \
+    chmod +x /usr/local/bin/tflint && \
+    rm -f /tmp/tflint.zip
 
 RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
     | sh -s -- -b /usr/local/bin
