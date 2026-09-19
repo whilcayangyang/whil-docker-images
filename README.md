@@ -73,7 +73,7 @@ ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest
 | tflint | latest | binary |
 | trivy | latest | binary |
 | terraform-docs | v0.24.0 | binary |
-| talosctl | latest | binary (talos.dev/install) |
+| talosctl | 1.14.1 | binary |
 | kubeseal | 0.38.1 | binary |
 | flux | 2.8.8 | binary |
 | sops | 3.13.1 | binary |

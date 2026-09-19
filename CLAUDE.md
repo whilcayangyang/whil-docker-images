@@ -14,7 +14,7 @@ docker build -t ghcr.io/whilcayangyang/whil-docker-images/<subfolder>:latest <su
 
 ## Version Pinning
 
-Pin versions via `ENV` variables at the top of the builder stage. Tools installed via install scripts (`tflint`, `trivy`, `talosctl`) are intentionally unpinned — leave them that way.
+Pin versions via `ENV` variables at the top of the builder stage. Tools installed via install scripts (`tflint`, `trivy`) are intentionally unpinned — leave them that way.
 
 ## fedora-devops-toolbox Gotchas
 

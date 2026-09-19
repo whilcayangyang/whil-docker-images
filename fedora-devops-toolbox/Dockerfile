@@ -4,9 +4,10 @@ FROM fedora:${FEDORA_VERSION} AS builder
 
 ENV TF_VERSION="1.15.9"
 ENV TFDOCS_VERSION="v0.24.0"
-ENV KUBESEAL_VERSION="0.39.1"
-ENV FLUX_VERSION="2.9.4"
+ENV KUBESEAL_VERSION="0.40.0"
+ENV FLUX_VERSION="2.9.5"
 ENV SOPS_VERSION="3.13.3"
+ENV TALOS_VERSION="1.14.1"
 
 RUN dnf install -y curl unzip tar openssl && dnf clean all
 
@@ -34,7 +35,9 @@ RUN TFDOCS_TGZ="terraform-docs-${TFDOCS_VERSION}-linux-amd64.tar.gz" \
   && rm -f /tmp/${TFDOCS_TGZ} /usr/local/bin/LICENSE /usr/local/bin/README.md
 
 # --- talos ---
-RUN curl -sL https://talos.dev/install | sh
+RUN curl -sfL "https://github.com/siderolabs/talos/releases/download/v${TALOS_VERSION}/talosctl-linux-amd64" \
+  -o /usr/local/bin/talosctl \
+  && chmod +x /usr/local/bin/talosctl
 
 # --- kubeseal ---
 RUN curl -sfOL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v${KUBESEAL_VERSION}/kubeseal-${KUBESEAL_VERSION}-linux-amd64.tar.gz" \
