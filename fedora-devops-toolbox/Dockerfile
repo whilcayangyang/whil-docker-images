@@ -8,6 +8,7 @@ ENV KUBESEAL_VERSION="0.40.0"
 ENV FLUX_VERSION="2.9.5"
 ENV SOPS_VERSION="3.13.3"
 ENV TALOS_VERSION="1.14.1"
+ENV HUGO_VERSION="0.166.0"
 
 RUN dnf install -y curl unzip tar openssl && dnf clean all
 
@@ -19,8 +20,11 @@ RUN TF_ZIP="terraform_${TF_VERSION}_linux_amd64.zip" \
   && rm -f /tmp/${TF_ZIP}
 
 # --- tflint ---
-RUN curl -sfL https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh \
-  | bash -s -- -b /usr/local/bin
+RUN curl -sfL https://github.com/terraform-linters/tflint/releases/latest/download/tflint_linux_amd64.zip \
+    -o /tmp/tflint.zip && \
+    unzip -o /tmp/tflint.zip -d /usr/local/bin/ > /dev/null && \
+    chmod +x /usr/local/bin/tflint && \
+    rm -f /tmp/tflint.zip
 
 # --- trivy ---
 RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh \
@@ -33,6 +37,14 @@ RUN TFDOCS_TGZ="terraform-docs-${TFDOCS_VERSION}-linux-amd64.tar.gz" \
   && tar -xzf /tmp/${TFDOCS_TGZ} -C /usr/local/bin/ \
   && chmod +x /usr/local/bin/terraform-docs \
   && rm -f /tmp/${TFDOCS_TGZ} /usr/local/bin/LICENSE /usr/local/bin/README.md
+
+# --- hugo ---
+RUN HUGO_TGZ="hugo_${HUGO_VERSION}_linux-amd64.tar.gz" \
+  && curl -sfL "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${HUGO_TGZ}" \
+  -o /tmp/${HUGO_TGZ} \
+  && tar -xzf /tmp/${HUGO_TGZ} -C /usr/local/bin/ hugo \
+  && chmod +x /usr/local/bin/hugo \
+  && rm -f /tmp/${HUGO_TGZ}
 
 # --- talos ---
 RUN curl -sfL "https://github.com/siderolabs/talos/releases/download/v${TALOS_VERSION}/talosctl-linux-amd64" \
@@ -68,6 +80,7 @@ COPY --from=builder /usr/local/bin/terraform      /usr/local/bin/terraform
 COPY --from=builder /usr/local/bin/tflint         /usr/local/bin/tflint
 COPY --from=builder /usr/local/bin/trivy          /usr/local/bin/trivy
 COPY --from=builder /usr/local/bin/terraform-docs /usr/local/bin/terraform-docs
+COPY --from=builder /usr/local/bin/hugo           /usr/local/bin/hugo
 COPY --from=builder /usr/local/bin/talosctl       /usr/local/bin/talosctl
 COPY --from=builder /usr/local/bin/kubeseal       /usr/local/bin/kubeseal
 COPY --from=builder /usr/local/bin/flux           /usr/local/bin/flux
@@ -80,7 +93,6 @@ RUN dnf install -y --setopt=install_weak_deps=False \
   ansible \
   nodejs \
   npm \
-  hugo \
   go-task \
   git \
   vim \
