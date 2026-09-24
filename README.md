@@ -10,7 +10,7 @@ A collection of container images built and published to GHCR via GitHub Actions.
 
 ## Images
 
-### `vscode-sandbox 268.10 MB  (0.26 GB) `
+### `vscode-sandbox 268.64 MB  (0.26 GB) `
 
 [![ghcr: vscode-sandbox](https://img.shields.io/badge/ghcr.io-vscode--sandbox-blue?logo=docker&logoColor=white)](https://github.com/whilcayangyang/whil-docker-images/pkgs/container/whil-docker-images%2Fvscode-sandbox)
 
@@ -40,7 +40,7 @@ ghcr.io/whilcayangyang/whil-docker-images/vscode-sandbox:latest
 
 ---
 
-### `fedora-devops-toolbox 913.54 MB  (0.89 GB) `
+### `fedora-devops-toolbox 913.70 MB  (0.89 GB) `
 
 [![ghcr: fedora-devops-toolbox](https://img.shields.io/badge/ghcr.io-fedora--devops--toolbox-blue?logo=docker&logoColor=white)](https://github.com/whilcayangyang/whil-docker-images/pkgs/container/whil-docker-images%2Ffedora-devops-toolbox)
 
@@ -110,6 +110,14 @@ toolbox enter devops
 ```bash
 distrobox create --image ghcr.io/whilcayangyang/whil-docker-images/fedora-devops-toolbox:latest --name devops
 distrobox enter devops
+```
+
+#### Updating pinned tools without rebuilding
+
+`fedora-devops-toolbox/install-devops-tools.sh` reinstalls the pinned binary tools (terraform, tflint, trivy, terraform-docs, hugo, talosctl, kubeseal, sops, flux) directly into a running toolbox/distrobox container's `/usr/local/bin`, using the same versions and download steps as the Dockerfile's builder stage. Useful for picking up a version bump or refreshing `latest`-pinned binaries (tflint, trivy) without rebuilding and recreating the container.
+
+```bash
+sudo fedora-devops-toolbox/install-devops-tools.sh
 ```
 
 ---
