@@ -11,7 +11,7 @@ if [[ $EUID -ne 0 ]]; then
   exit 1
 fi
 
-TF_VERSION="1.15.9"
+TF_VERSION="1.16.4"
 TFDOCS_VERSION="v0.24.0"
 KUBESEAL_VERSION="0.40.0"
 FLUX_VERSION="2.9.5"
